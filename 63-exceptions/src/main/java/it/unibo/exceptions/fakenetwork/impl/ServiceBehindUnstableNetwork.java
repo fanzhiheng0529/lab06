@@ -2,6 +2,7 @@ package it.unibo.exceptions.fakenetwork.impl;
 
 import it.unibo.exceptions.arithmetic.ArithmeticService;
 import it.unibo.exceptions.fakenetwork.api.NetworkComponent;
+import it.unibo.exceptions.fakenetwork.api.NetworkException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,8 +11,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.random.RandomGenerator;
 
+
 import static it.unibo.exceptions.arithmetic.ArithmeticService.KEYWORDS;
 import static it.unibo.exceptions.arithmetic.ArithmeticUtil.nullIfNumberOrException;
+
 
 /**
  * A {@link NetworkComponent} mimicking an unstable network.
@@ -29,6 +32,9 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
         /*
          * The probability should be in [0, 1[!
          */
+        if(failProbability < 0 || failProbability >= 1){
+            throw new IllegalArgumentException("failProbability must be between 0 (inclusive) and 1 (exclusive)");
+        }
         this.failProbability = failProbability;
         randomGenerator = new Random(randomSeed);
     }
@@ -55,8 +61,7 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
             commandQueue.add(data);
         } else {
             final var message = data + " is not a valid keyword (allowed: " + KEYWORDS + "), nor is a number";
-            IO.println(message);
-            commandQueue.clear();
+            throw new IllegalArgumentException(message,exceptionWhenParsedAsNumber);
             /*
              * This method, in this point, should throw an IllegalStateException.
              * Its cause, however, is the previous NumberFormatException.
@@ -79,7 +84,12 @@ public final class ServiceBehindUnstableNetwork implements NetworkComponent {
 
     private void accessTheNetwork(final String message) throws IOException {
         if (randomGenerator.nextDouble() < failProbability) {
-            throw new IOException("Generic I/O error");
+            if(message == null){
+                throw new NetworkException();
+            }
+            else{
+                throw new NetworkException(message);
+            }
         }
     }
 
