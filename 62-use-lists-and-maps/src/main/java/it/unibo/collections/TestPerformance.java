@@ -17,7 +17,7 @@ public final class TestPerformance {
     /**
      * Program entry point.
      */
-    public static void main() {
+    public static void main(String[]args) {
         /*
          * Set up the data structures
          */
@@ -37,7 +37,7 @@ public final class TestPerformance {
          */
         time = System.nanoTime() - time;
         final var millis = TimeUnit.NANOSECONDS.toMillis(time);
-        IO.println(
+        System.out.println(
             "Converting "
                 + set.size()
                 + " ints to String and inserting them in a Set took "
