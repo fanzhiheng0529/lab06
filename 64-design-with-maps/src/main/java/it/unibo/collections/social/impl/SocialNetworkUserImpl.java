@@ -38,7 +38,7 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *
      * think of what type of keys and values would best suit the requirements
      */
-
+    private final Map<String, Set<U> > followedUser;
     /*
      * [CONSTRUCTORS]
      *
@@ -64,12 +64,17 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      *            application
      */
     public SocialNetworkUserImpl(final String name, final String surname, final String user, final int userAge) {
-        super(null, null, null, 0);
+        super(name, surname, user, userAge);
+        this.followedUser = new HashMap<>();
     }
 
     /*
      * 2) Define a further constructor where the age defaults to -1
      */
+    public SocialNetworkUserImpl(final String name, final String surname, final String user) {
+        super(name, surname, user, -1);
+        this.followedUser = new HashMap<>();
+    }
 
     /*
      * [METHODS]
@@ -78,7 +83,10 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public boolean addFollowedUser(final String circle, final U user) {
-        return false;
+        if(!this.followedUser.containsKey(circle)){
+            this.followedUser.put(circle,new HashSet<>());
+        }
+        return this.followedUser.get(circle).add(user);
     }
 
     /**
@@ -88,11 +96,19 @@ public final class SocialNetworkUserImpl<U extends User> extends UserImpl implem
      */
     @Override
     public Collection<U> getFollowedUsersInGroup(final String groupName) {
-        return null;
+        final Collection<U> users = this.followedUser.get(groupName);
+        if(users != null){
+            return new ArrayList<>(users);
+        } 
+        return Collections.emptyList();
     }
 
     @Override
     public List<U> getFollowedUsers() {
-        return null;
+        final Set<U> allUsers = new HashSet<>();
+        for(final Set<U> group : this.followedUser.values()){
+            allUsers.addAll(group);
+        }
+        return new ArrayList<>(allUsers); 
     }
 }

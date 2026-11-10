@@ -32,7 +32,7 @@ public final class TestSocialNetworkUser {
      * This is going to act as a test for
      * {@link SocialNetworkUserImpl}.
      */
-    public static void main() {
+    public static void main(String[] args) {
         /*
          * create 5 social network users (SocialNetworkUser):
          *
@@ -48,11 +48,11 @@ public final class TestSocialNetworkUser {
          *
          * * Adam Smith, asmith, (no age)
          */
-        final SocialNetworkUser<User> kbacon = null; //TODO
-        final SocialNetworkUser<User> dwashington = null; //TODO
-        final SocialNetworkUser<User> mgladwell = null; //TODO
-        final SocialNetworkUser<User> ntaleb = null; //TODO
-        final User asmith = null; //TODO
+        final SocialNetworkUser<User> kbacon = new SocialNetworkUserImpl<>("Kevin", "Bacon", "kbacon", 56);
+        final SocialNetworkUser<User> dwashington = new SocialNetworkUserImpl<>("Denzel", "Washington", "dwashington", 59);
+        final SocialNetworkUser<User> mgladwell = new SocialNetworkUserImpl<>("Malcom", "Gladwell", "mgladwell", 51);
+        final SocialNetworkUser<User> ntaleb = new SocialNetworkUserImpl<>("Nicholas", "Taleb", "ntaleb", 54);
+        final User asmith = new UserImpl("Adam", "Smith", "asmith");
         /*
          * Make people follow each other
          */
@@ -87,7 +87,7 @@ public final class TestSocialNetworkUser {
 
     private static void assertTrue(final String message, final boolean value) {
         if (value) {
-            IO.println("OK: " + message);
+            System.out.println("OK: " + message);
         } else {
             throw new AssertionError("ERROR, the following is false: " + message);
         }
